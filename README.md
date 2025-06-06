@@ -2,84 +2,59 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Evento;
-use App\Models\EventoFoto;
+use App\Models\Loja;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
-class EventoController extends Controller
+class LojaController extends Controller
 {
     public function index()
     {
-        $eventos = Evento::with('fotos')->latest()->get();
-        return view('eventos.index', compact('eventos'));
+        $lojas = Loja::latest()->get();
+        return view('lojas.index', compact('lojas'));
     }
 
     public function create()
     {
-        return view('eventos.create');
+        return view('lojas.create');
     }
 
     public function store(Request $request)
     {
         $request->validate([
             'nome' => 'required',
-            'data_evento' => 'required|date',
-            'fotos.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'link' => 'required|url',
         ]);
 
-        $evento = Evento::create([
-            'nome' => $request->nome,
-            'data_evento' => $request->data_evento,
-        ]);
+        Loja::create($request->all());
 
-        if ($request->hasFile('fotos')) {
-            foreach ($request->file('fotos') as $foto) {
-                $caminho = $foto->store('eventos', 'public');
-                EventoFoto::create([
-                    'evento_id' => $evento->id,
-                    'caminho_foto' => $caminho,
-                ]);
-            }
-        }
-
-        return redirect()->route('eventos.index')->with('success', 'Evento criado com sucesso.');
+        return redirect()->route('lojas.index')->with('success', 'Loja parceira adicionada com sucesso.');
     }
 
-    public function show(Evento $evento)
+    public function show(Loja $loja)
     {
-        return view('eventos.show', compact('evento'));
+        return view('lojas.show', compact('loja'));
     }
 
-    public function edit(Evento $evento)
+    public function edit(Loja $loja)
     {
-        return view('eventos.edit', compact('evento'));
+        return view('lojas.edit', compact('loja'));
     }
 
-    public function update(Request $request, Evento $evento)
+    public function update(Request $request, Loja $loja)
     {
         $request->validate([
             'nome' => 'required',
-            'data_evento' => 'required|date',
+            'link' => 'required|url',
         ]);
 
-        $evento->update([
-            'nome' => $request->nome,
-            'data_evento' => $request->data_evento,
-        ]);
+        $loja->update($request->all());
 
-        return redirect()->route('eventos.index')->with('success', 'Evento atualizado com sucesso.');
+        return redirect()->route('lojas.index')->with('success', 'Loja atualizada com sucesso.');
     }
 
-    public function destroy(Evento $evento)
+    public function destroy(Loja $loja)
     {
-        // Apaga fotos do storage
-        foreach ($evento->fotos as $foto) {
-            Storage::disk('public')->delete($foto->caminho_foto);
-        }
-
-        $evento->delete();
-
-        return redirect()->route('eventos.index')->with('success', 'Evento removido com sucesso.');
+        $loja->delete();
+        return redirect()->route('lojas.index')->with('success', 'Loja removida com sucesso.');
     }
 }
