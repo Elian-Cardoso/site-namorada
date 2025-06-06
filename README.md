@@ -2,7 +2,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Loja extends Model
+class Review extends Model
 {
-    protected $fillable = ['nome', 'link'];
+    protected $fillable = ['email', 'avaliacao', 'comentario'];
 }
