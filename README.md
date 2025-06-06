@@ -1,9 +1,9 @@
 public function up(): void
 {
-    Schema::create('eventos', function (Blueprint $table) {
+    Schema::create('evento_fotos', function (Blueprint $table) {
         $table->id();
-        $table->string('nome');
-        $table->date('data_evento');
+        $table->foreignId('evento_id')->constrained()->onDelete('cascade');
+        $table->string('caminho_foto');
         $table->timestamps();
     });
 }
