@@ -1,8 +1,9 @@
-namespace App\Models;
-
-use Illuminate\Database\Eloquent\Model;
-
-class Review extends Model
+public function up(): void
 {
-    protected $fillable = ['email', 'avaliacao', 'comentario'];
+    Schema::create('eventos', function (Blueprint $table) {
+        $table->id();
+        $table->string('nome');
+        $table->date('data_evento');
+        $table->timestamps();
+    });
 }
