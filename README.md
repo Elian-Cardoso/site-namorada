@@ -1,62 +1,78 @@
-<?php
-
 namespace App\Http\Controllers;
 
-use App\Models\Review;
+use App\Models\Evento;
+use App\Models\EventoFoto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
-class ReviewController extends Controller
+class EventoController extends Controller
 {
     public function index()
     {
-        $reviews = Review::latest()->get();
-        return view('reviews.index', compact('reviews'));
+        $eventos = Evento::with('fotos')->get();
+        return view('eventos.index', compact('eventos'));
     }
 
     public function create()
     {
-        return view('reviews.create');
+        return view('eventos.create');
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
-            'estrelas' => 'required|integer|min:1|max:5',
-            'comentario' => 'required|string',
+            'nome' => 'required',
+            'data_evento' => 'required|date',
+            'fotos.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
-        Review::create($request->all());
+        $evento = Evento::create($request->only('nome', 'data_evento'));
 
-        return redirect()->route('reviews.index')->with('success', 'Review enviada com sucesso!');
+        if ($request->hasFile('fotos')) {
+            foreach ($request->file('fotos') as $foto) {
+                $path = $foto->store('evento_fotos', 'public');
+                EventoFoto::create([
+                    'evento_id' => $evento->id,
+                    'caminho_foto' => $path
+                ]);
+            }
+        }
+
+        return redirect()->route('eventos.index')->with('success', 'Evento criado com sucesso!');
     }
 
-    public function show(Review $review)
+    public function show(Evento $evento)
     {
-        return view('reviews.show', compact('review'));
+        $evento->load('fotos');
+        return view('eventos.show', compact('evento'));
     }
 
-    public function edit(Review $review)
+    public function edit(Evento $evento)
     {
-        return view('reviews.edit', compact('review'));
+        return view('eventos.edit', compact('evento'));
     }
 
-    public function update(Request $request, Review $review)
+    public function update(Request $request, Evento $evento)
     {
         $request->validate([
-            'email' => 'required|email',
-            'estrelas' => 'required|integer|min:1|max:5',
-            'comentario' => 'required|string',
+            'nome' => 'required',
+            'data_evento' => 'required|date'
         ]);
 
-        $review->update($request->all());
+        $evento->update($request->only('nome', 'data_evento'));
 
-        return redirect()->route('reviews.index')->with('success', 'Review atualizada com sucesso!');
+        return redirect()->route('eventos.index')->with('success', 'Evento atualizado!');
     }
 
-    public function destroy(Review $review)
+    public function destroy(Evento $evento)
     {
-        $review->delete();
-        return redirect()->route('reviews.index')->with('success', 'Review removida com sucesso!');
+        // Apaga as fotos do storage
+        foreach ($evento->fotos as $foto) {
+            Storage::disk('public')->delete($foto->caminho_foto);
+        }
+
+        $evento->delete();
+
+        return redirect()->route('eventos.index')->with('success', 'Evento excluído!');
     }
 }
