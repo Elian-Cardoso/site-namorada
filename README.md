@@ -2,12 +2,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Evento extends Model
+class EventoFoto extends Model
 {
-    protected $fillable = ['nome', 'data_evento'];
+    protected $fillable = ['evento_id', 'caminho_foto'];
 
-    public function fotos()
+    public function evento()
     {
-        return $this->hasMany(EventoFoto::class);
+        return $this->belongsTo(Evento::class);
     }
 }
