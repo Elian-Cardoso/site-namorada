@@ -1,9 +1,10 @@
 public function up(): void
 {
-    Schema::create('lojas', function (Blueprint $table) {
+    Schema::create('reviews', function (Blueprint $table) {
         $table->id();
-        $table->string('nome');
-        $table->string('link');
+        $table->string('email');
+        $table->tinyInteger('avaliacao'); // 1 a 5 estrelas
+        $table->text('comentario');
         $table->timestamps();
     });
 }
