@@ -2,59 +2,61 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Loja;
+use App\Models\Review;
 use Illuminate\Http\Request;
 
-class LojaController extends Controller
+class ReviewController extends Controller
 {
     public function index()
     {
-        $lojas = Loja::latest()->get();
-        return view('lojas.index', compact('lojas'));
+        $reviews = Review::latest()->get();
+        return view('reviews.index', compact('reviews'));
     }
 
     public function create()
     {
-        return view('lojas.create');
+        return view('reviews.create');
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'nome' => 'required',
-            'link' => 'required|url',
+            'email' => 'required|email',
+            'estrelas' => 'required|integer|min:1|max:5',
+            'comentario' => 'required|string',
         ]);
 
-        Loja::create($request->all());
+        Review::create($request->all());
 
-        return redirect()->route('lojas.index')->with('success', 'Loja parceira adicionada com sucesso.');
+        return redirect()->route('reviews.index')->with('success', 'Review enviada com sucesso!');
     }
 
-    public function show(Loja $loja)
+    public function show(Review $review)
     {
-        return view('lojas.show', compact('loja'));
+        return view('reviews.show', compact('review'));
     }
 
-    public function edit(Loja $loja)
+    public function edit(Review $review)
     {
-        return view('lojas.edit', compact('loja'));
+        return view('reviews.edit', compact('review'));
     }
 
-    public function update(Request $request, Loja $loja)
+    public function update(Request $request, Review $review)
     {
         $request->validate([
-            'nome' => 'required',
-            'link' => 'required|url',
+            'email' => 'required|email',
+            'estrelas' => 'required|integer|min:1|max:5',
+            'comentario' => 'required|string',
         ]);
 
-        $loja->update($request->all());
+        $review->update($request->all());
 
-        return redirect()->route('lojas.index')->with('success', 'Loja atualizada com sucesso.');
+        return redirect()->route('reviews.index')->with('success', 'Review atualizada com sucesso!');
     }
 
-    public function destroy(Loja $loja)
+    public function destroy(Review $review)
     {
-        $loja->delete();
-        return redirect()->route('lojas.index')->with('success', 'Loja removida com sucesso.');
+        $review->delete();
+        return redirect()->route('reviews.index')->with('success', 'Review removida com sucesso!');
     }
 }
