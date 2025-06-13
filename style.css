@@ -1,4 +1,4 @@
-
+/* ESTILO BASE */
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
@@ -7,15 +7,18 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  padding: 20px;
 }
 
 .container {
   max-width: 600px;
+  width: 100%;
   padding: 20px;
   background-color: #fff;
   border-radius: 20px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
   text-align: center;
+  animation: fadeIn 1s ease-in-out;
 }
 
 h1, h2 {
@@ -25,6 +28,7 @@ h1, h2 {
 p {
   font-size: 1.1em;
   color: #333;
+  line-height: 1.5;
 }
 
 button {
@@ -36,17 +40,20 @@ button {
   border-radius: 8px;
   cursor: pointer;
   font-size: 1em;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 button:hover {
   background-color: #e91e63;
+  transform: scale(1.05);
 }
 
 .hidden {
   display: none;
 }
 
+/* ENVELOPE */
 .envelope {
   background-color: #ffcdd2;
   padding: 20px;
@@ -55,8 +62,14 @@ button:hover {
   margin: 20px 0;
   font-weight: bold;
   color: #880e4f;
+  transition: transform 0.3s ease;
 }
 
+.envelope:hover {
+  transform: scale(1.05);
+}
+
+/* MENSAGEM */
 .message {
   background-color: #fff0f5;
   padding: 15px;
@@ -65,7 +78,7 @@ button:hover {
   margin-top: 10px;
 }
 
-/* Balões */
+/* BALÕES */
 #balloonContainer {
   position: relative;
   width: 100%;
@@ -74,6 +87,7 @@ button:hover {
   margin-top: 20px;
   background: #fef6fb;
   border-radius: 15px;
+  border: 2px dashed #f8bbd0;
 }
 
 .balloon {
@@ -115,7 +129,7 @@ button:hover {
   }
 }
 
-/* Confete */
+/* CONFETE */
 .confetti {
   position: absolute;
   width: 6px;
@@ -137,7 +151,37 @@ button:hover {
   }
 }
 
-/* Responsivo */
+/* PRESENTE */
+#giftImage {
+  margin-top: 20px;
+  animation: fadeIn 1s ease-in-out;
+}
+
+#giftImage img {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  margin-bottom: 15px;
+}
+
+/* BOTÕES EXTRAS */
+#btn-sorriso:hover {
+  background-color: #ffe0e6;
+  cursor: pointer;
+}
+
+#presente a:hover {
+  background-color: #ffb6c1;
+}
+
+/* ANIMAÇÃO DE ENTRADA */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* RESPONSIVO */
 @media (max-width: 480px) {
   .balloon {
     width: 50px;
